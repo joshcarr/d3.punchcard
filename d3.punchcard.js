@@ -17,6 +17,7 @@ Punchcard.prototype.draw = function( options ){
       paneRight = width - paneLeft,
       sectionHeight = 50,
       height = ( sectionHeight * this.data.length ) + margin,
+      sectionWidth = paneRight / this.data[0].length,
       i,
       j,
       tx,
@@ -27,7 +28,7 @@ Punchcard.prototype.draw = function( options ){
 
   // X-Axis.
   var x = d3.scale.linear().domain([0, this.data[0].length-1]).
-    range([paneLeft, paneRight ]);
+    range([ paneLeft + (sectionWidth / 2) , paneRight + (sectionWidth / 2)]);
 
   // Y-Axis.
   var y = d3.scale.linear().domain([0, this.data.length-1]).
