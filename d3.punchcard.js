@@ -24,16 +24,6 @@ Punchcard.prototype.draw = function( options ){
       max = 0,
       circleRadius = 20;
 
-  // var margin = { top: 10, right: 10, bottom: 10, left: 80 },
-  //     width = options.width - margin.left - margin.right,
-  //     height = 520,
-      
-  //     i,
-  //     j,
-  //     tx,
-  //     ty,
-  //     max = 0;
-
   // X-Axis.
   var x = d3.scale.linear().domain([0, 23]).
     range([paneLeft, paneRight ]);
@@ -117,17 +107,27 @@ Punchcard.prototype.draw = function( options ){
   this.data = this.data.reverse();
 
   // Find the max value to normalize the size of the circles.
-  for (i = 0; i < this.data.length; i++) {
-    max = Math.max(max, Math.max.apply(null, this.data[i]));
-  }
+  max = d3.max( this.data , function(array) {
+    
+    // we ignore the first element as it is metadata
+    return d3.max(array.slice(1), function ( obj) {
+
+      // and we only return the value, not the key
+      return obj.value;
+    });
+  });
 
   // Show the circles on the punchcard.
   for (i = 0; i < this.data.length; i++) {
-    for (j = 0; j < this.data[i].length; j++) {
+
+
+    // we start with 1 to igone the first metadata element
+    for (j = 1; j < this.data[i].length; j++) {
+
       punchcard.
         append('g').
         selectAll('circle').
-        data([this.data[i][j]]).
+        data([parseInt(this.data[i][j].value, 10)]).
         enter().
         append('circle').
         style('fill', '#888').
@@ -138,7 +138,9 @@ Punchcard.prototype.draw = function( options ){
         //    style('top', (d3.event.pageY - 10) + 'px').
         //    style('left', (d3.event.pageX + 10) + 'px');
         // }).
-        attr('r', function(d) { return d / max * circleRadius; }).
+        attr('r', function(d) {
+          return d / max * circleRadius;
+        }).
         attr('transform', function() {
             tx = paneLeft  + x(j);
             ty = height - y(i) - (sectionHeight/2);
