@@ -10,11 +10,12 @@ function Punchcard( options ) {
 
 Punchcard.prototype.draw = function( options ){
 
-  var pane_left = 80,
-      pane_right = options.width,
-      width = pane_left + pane_right,
+  var width = options.width,
+      pane_left = 80,
+      pane_right = width - pane_left,
       height = 500,
       margin = 10,
+      section_height = (height-20)/7,
       i,
       j,
       tx,
@@ -37,7 +38,7 @@ Punchcard.prototype.draw = function( options ){
 
   // Y-Axis.
   var y = d3.scale.linear().domain([0, 6]).
-    range([2 * margin, height - 20]);
+    range([2 * margin, height - section_height]);
 
 
   // $( this.element ).empty();
@@ -141,7 +142,7 @@ Punchcard.prototype.draw = function( options ){
         attr('r', function(d) { return d / max * 14; }).
         attr('transform', function() {
             tx = pane_left  + x(j);
-            ty = height - y(i) - (((height-20)/7)/2);
+            ty = height - y(i) - (section_height/2);
             return 'translate(' + tx + ', ' + ty + ')';
           });
     }
