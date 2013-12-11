@@ -13,10 +13,10 @@ Punchcard.prototype.draw = function( options ){
   var margin = 10,
       lineHeight = 5,
       width = options.width - (margin *2),
-      pane_left = 80,
-      pane_right = width - pane_left,
+      paneLeft = 80,
+      paneRight = width - paneLeft,
       height = 500 - margin,
-      section_height = (height-(margin*2))/7,
+      sectionHeight = (height-(margin*2))/7,
       i,
       j,
       tx,
@@ -36,11 +36,11 @@ Punchcard.prototype.draw = function( options ){
 
   // X-Axis.
   var x = d3.scale.linear().domain([0, 23]).
-    range([pane_left, pane_right ]);
+    range([paneLeft, paneRight ]);
 
   // Y-Axis.
   var y = d3.scale.linear().domain([0, 6]).
-    range([2 * margin, height - section_height]);
+    range([2 * margin, height - sectionHeight]);
 
   // The main SVG element.
   var punchcard = d3.select(this.element)
@@ -72,7 +72,7 @@ Punchcard.prototype.draw = function( options ){
       enter().
       append('text').
       attr('x', 0).
-      attr('y', height - y(i) - (section_height/2) + lineHeight).
+      attr('y', height - y(i) - (sectionHeight/2) + lineHeight).
       attr('text-anchor', 'left').
       text(['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday'][i]);
 
@@ -82,8 +82,8 @@ Punchcard.prototype.draw = function( options ){
       data(x.ticks(24)).
       enter().
       append('line').
-      attr('x1', function(d) { return pane_left  + x(d); }).
-      attr('x2', function(d) { return pane_left  + x(d); }).
+      attr('x1', function(d) { return paneLeft  + x(d); }).
+      attr('x2', function(d) { return paneLeft  + x(d); }).
       attr('y1', height - 1 * margin - y(i)).
       attr('y2', height  - y(i)).
       style('stroke-width', 1).
@@ -97,7 +97,7 @@ Punchcard.prototype.draw = function( options ){
     enter().
     append('text').
     attr('class', 'rule').
-    attr('x', function(d) { return pane_left  + x(d); }).
+    attr('x', function(d) { return paneLeft  + x(d); }).
     attr('y', height ).
     attr('text-anchor', 'middle').
     text(function(d) {
@@ -140,8 +140,8 @@ Punchcard.prototype.draw = function( options ){
         // }).
         attr('r', function(d) { return d / max * circleRadius; }).
         attr('transform', function() {
-            tx = pane_left  + x(j);
-            ty = height - y(i) - (section_height/2);
+            tx = paneLeft  + x(j);
+            ty = height - y(i) - (sectionHeight/2);
             return 'translate(' + tx + ', ' + ty + ')';
           });
     }
