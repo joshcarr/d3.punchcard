@@ -78,11 +78,10 @@ console.log( this.data );
       });
 
 
-    // removing the individual ticks for now
     punchcard.
       append('g').
       selectAll('line').
-      data(this.data[0]).
+      data(this.data[0].slice(1)).
       enter().
       append('line').
       attr('x1', function(d,i) { return paneLeft  + x(i); }).
@@ -101,7 +100,7 @@ console.log( this.data );
   // Hour text markers.
   punchcard.
     selectAll('.rule').
-    data(this.data[0]).
+    data(this.data[0].slice(1)).
     enter().
     append('text').
     attr('class', 'rule').
@@ -123,49 +122,106 @@ console.log( this.data );
     });
   });
 
-  // Show the circles on the punchcard.
-  for (i = 0; i < this.data.length; i++) {
 
 
-    // we start with 1 to igone the first metadata element
-    for (j = 1; j < this.data[i].length; j++) {
+// console.log( punchcard );
 
-      punchcard.
-        append('g').
-        selectAll('circle').
-        data([parseInt(this.data[i][j].value, 10)]).
-        enter().
-        append('circle').
-        style('fill', '#888').
-        // on('mouseover', mover).
-        // on('mouseout', mout).
-        // on('mousemove', function() {
-        //  return tooltip.
-        //    style('top', (d3.event.pageY - 10) + 'px').
-        //    style('left', (d3.event.pageX + 10) + 'px');
-        // }).
-        attr('r', function(d) {
-          return d / max * circleRadius;
-        }).
-        attr('transform', function() {
-            tx = paneLeft  + x(j);
-            ty = height - y(i) - (sectionHeight/2);
-            return 'translate(' + tx + ', ' + ty + ')';
-          });
-    }
-    // function mover(d) {
-    //   tooltip = d3.select('body')
-    //    .append('div')
-    //    .style('position', 'absolute')
-    //    .style('z-index', '99999')
-    //    .attr('class', 'vis-tool-tip')
-    //    .text(d);
-    // }
+  var punchcardRow = punchcard.selectAll('.row')
+    .data( this.data )
+    .enter()
+    .append('g')
+    .attr('class', 'row');
 
-    // function mout(d) {
-    //   $('.vis-tool-tip').fadeOut(50).remove();
-    // }
-  }
+  punchcardRow.
+    selectAll('circle').
+    data( function(d, i ) {
+      console.log( d, i );
+      return d.slice(1);
+    } ).
+    enter().
+    append('circle').
+    style('fill', '#888').
+    attr('r', function(d, i) {
+      return parseInt( d.value, 10) / max * circleRadius;
+    }).
+    attr('transform', function(d, i) {
+
+      // console.log( d, i );
+
+      tx = paneLeft  + x(i);
+      ty = height - y(i) - (sectionHeight/2);
+      return 'translate(' + tx + ', ' + ty + ')';
+    });
+
+  // punchcard.
+  //   append('g').
+  //   selectAll('circle').
+  //   data( this.data ).
+  //   enter().
+  //   append('circle').
+  //   style('fill', '#888').
+  //   attr('r', function(d, i) {
+  //     // console.log( d, i );
+  //     return d / max * circleRadius;
+  //   }).
+  //   attr('transform', function(d, i) {
+  //       tx = paneLeft  + x(j);
+  //       ty = height - y(i) - (sectionHeight/2);
+  //       return 'translate(' + tx + ', ' + ty + ')';
+  //     });
+
+
+
+
+
+
+
+
+
+
+  // // Show the circles on the punchcard.
+  // for (i = 0; i < this.data.length; i++) {
+
+
+  //   // we start with 1 to igone the first metadata element
+  //   for (j = 1; j < this.data[i].length; j++) {
+
+  //     punchcard.
+  //       append('g').
+  //       selectAll('circle').
+  //       data([parseInt(this.data[i][j].value, 10)]).
+  //       enter().
+  //       append('circle').
+  //       style('fill', '#888').
+  //       // on('mouseover', mover).
+  //       // on('mouseout', mout).
+  //       // on('mousemove', function() {
+  //       //  return tooltip.
+  //       //    style('top', (d3.event.pageY - 10) + 'px').
+  //       //    style('left', (d3.event.pageX + 10) + 'px');
+  //       // }).
+  //       attr('r', function(d) {
+  //         return d / max * circleRadius;
+  //       }).
+  //       attr('transform', function() {
+  //           tx = paneLeft  + x(j);
+  //           ty = height - y(i) - (sectionHeight/2);
+  //           return 'translate(' + tx + ', ' + ty + ')';
+  //         });
+  //   }
+  //   // function mover(d) {
+  //   //   tooltip = d3.select('body')
+  //   //    .append('div')
+  //   //    .style('position', 'absolute')
+  //   //    .style('z-index', '99999')
+  //   //    .attr('class', 'vis-tool-tip')
+  //   //    .text(d);
+  //   // }
+
+  //   // function mout(d) {
+  //   //   $('.vis-tool-tip').fadeOut(50).remove();
+  //   // }
+  // }
 
   return this;
 };
