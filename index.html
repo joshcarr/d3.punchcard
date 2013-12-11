@@ -20,22 +20,28 @@
 
       <script>
 
-        var csv = 'type,12/3,12/2,12/1,11/30,11/29,11/28\ntemp,2,4,3,6,2,1\nsound,0,1,3,1,6,7';
-        
-        // parse the csv
-        var parsed = d3.csv.parse( csv, function ( d, i) {
-          return d3.entries(d);
-        });
+        d3.csv(
+          'data3.csv',
+          // parsing function
+          function (d) {
+            return d3.entries(d);
+          },
+          // callback function
+          function ( data ) {
+            showGraph( data );
+          }
+        )
 
-        var examplePunchcard = new Punchcard({
-          data: parsed,
-          element: '#example'
-        })
-        .draw({ width: document.getElementById('example').offsetWidth });
+
+        function showGraph ( data ) {
+          var examplePunchcard = new Punchcard({
+            data: data,
+            element: '#example'
+          })
+          .draw({ width: document.getElementById('example').offsetWidth });
+        }
 
       </script>
-
-
 
     </body>
 </html>
