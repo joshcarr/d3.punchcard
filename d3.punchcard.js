@@ -12,11 +12,11 @@ Punchcard.prototype.draw = function( options ){
 
   var margin = 10,
       lineHeight = 5,
-      width = options.width - (margin *2),
+      width = options.width,
       paneLeft = 80,
       paneRight = width - paneLeft,
       sectionHeight = 50,
-      height = ( sectionHeight * this.data.length ) + margin,
+      height = ( sectionHeight * this.data.length ),
       sectionWidth = paneRight / this.data[0].length,
       i,
       j,
@@ -32,14 +32,14 @@ Punchcard.prototype.draw = function( options ){
 
   // Y-Axis.
   var y = d3.scale.linear().domain([0, this.data.length-1]).
-    range([2 * margin, height - sectionHeight]);
+    range([0, height - sectionHeight]);
 
   // The main SVG element.
   var punchcard = d3.select(this.element)
     .html('')
     .append('svg')
-      .attr('width', width + (margin * 2 ))
-      .attr('height', height + margin)
+      .attr('width', width )
+      .attr('height', height + (margin*3))
       .append('g');
 
   // Hour line markers by day.
@@ -87,10 +87,10 @@ Punchcard.prototype.draw = function( options ){
     attr('x1', function(d,i) { return paneLeft  + x(i); }).
     attr('x2', function(d,i) { return paneLeft  + x(i); }).
     attr('y1', function (d, i) {
-      return  height - (2* margin);
+      return height + margin;
     }).
     attr('y2', function (d, i) {
-      return height - margin;
+      return height;
     }).
 
     style('stroke-width', 1).
@@ -105,7 +105,7 @@ Punchcard.prototype.draw = function( options ){
     append('text').
     attr('class', 'rule').
     attr('x', function(d, i) { return paneLeft  + x(i); }).
-    attr('y', height ).
+    attr('y', height  + (2*margin) + lineHeight).
     attr('text-anchor', 'middle').
     text(function(d) {
       return d.key;
