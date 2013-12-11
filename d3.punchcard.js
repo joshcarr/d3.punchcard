@@ -10,8 +10,6 @@ function Punchcard( options ) {
 
 Punchcard.prototype.draw = function( options ){
 
-console.log( this.data );
-
   var margin = 10,
       lineHeight = 5,
       width = options.width - (margin *2),
@@ -24,7 +22,8 @@ console.log( this.data );
       tx,
       ty,
       max = 0,
-      circleRadius = 20;
+      circleRadius = 20,
+      punchcardRow;
 
   // X-Axis.
   var x = d3.scale.linear().domain([0, this.data[0].length-1]).
@@ -45,56 +44,56 @@ console.log( this.data );
   // Hour line markers by day.
 
 
-    punchcard.
-      append('g').
-      selectAll('line').
-      data(this.data).
-      enter().
-      append('line').
-      attr('x1', 0).
-      attr('x2', width).
-      attr('y1', function (d, i) {
-        return height - y(i)
-      }).
-      attr('y2', function (d, i) {
-        return height - y(i)
-      }).
-      style('stroke-width', 1).
-      style('stroke', '#efefef');
+  punchcard.
+    append('g').
+    selectAll('line').
+    data(this.data).
+    enter().
+    append('line').
+    attr('x1', 0).
+    attr('x2', width).
+    attr('y1', function (d, i) {
+      return height - y(i);
+    }).
+    attr('y2', function (d, i) {
+      return height - y(i);
+    }).
+    style('stroke-width', 1).
+    style('stroke', '#efefef');
 
-    punchcard.
-      append('g').
-      selectAll('.rule').
-      data(this.data).
-      enter().
-      append('text').
-      attr('x', 0).
-      attr('y', function (d, i) {
-        return height - y(i) - (sectionHeight/2) + lineHeight;
-      }).
-      attr('text-anchor', 'left').
-      text(function (d, i) {
-        return d[0].value;
-      });
+  punchcard.
+    append('g').
+    selectAll('.rule').
+    data(this.data).
+    enter().
+    append('text').
+    attr('x', 0).
+    attr('y', function (d, i) {
+      return height - y(i) - (sectionHeight/2) + lineHeight;
+    }).
+    attr('text-anchor', 'left').
+    text(function (d, i) {
+      return d[0].value;
+    });
 
 
-    punchcard.
-      append('g').
-      selectAll('line').
-      data(this.data[0].slice(1)).
-      enter().
-      append('line').
-      attr('x1', function(d,i) { return paneLeft  + x(i); }).
-      attr('x2', function(d,i) { return paneLeft  + x(i); }).
-      attr('y1', function (d, i) {
-        return  height - (2* margin)
-      }).
-      attr('y2', function (d, i) {
-        return height - margin;
-      }).
+  punchcard.
+    append('g').
+    selectAll('line').
+    data(this.data[0].slice(1)).
+    enter().
+    append('line').
+    attr('x1', function(d,i) { return paneLeft  + x(i); }).
+    attr('x2', function(d,i) { return paneLeft  + x(i); }).
+    attr('y1', function (d, i) {
+      return  height - (2* margin);
+    }).
+    attr('y2', function (d, i) {
+      return height - margin;
+    }).
 
-      style('stroke-width', 1).
-      style('stroke', '#efefef');
+    style('stroke-width', 1).
+    style('stroke', '#efefef');
 
 
   // Hour text markers.
@@ -126,16 +125,19 @@ console.log( this.data );
 
 // console.log( punchcard );
 
-  var punchcardRow = punchcard.selectAll('.row')
+  punchcardRow = punchcard.selectAll('.row')
     .data( this.data )
     .enter()
     .append('g')
-    .attr('class', 'row');
+    .attr('class', 'row')
+    .attr('transform', function(d, i) {
+      var ty = height - y(i) - (sectionHeight/2);
+      return 'translate(0, ' + ty + ')';
+    });
 
   punchcardRow.
     selectAll('circle').
     data( function(d, i ) {
-      console.log( d, i );
       return d.slice(1);
     } ).
     enter().
@@ -145,39 +147,9 @@ console.log( this.data );
       return parseInt( d.value, 10) / max * circleRadius;
     }).
     attr('transform', function(d, i) {
-
-      // console.log( d, i );
-
-      tx = paneLeft  + x(i);
-      ty = height - y(i) - (sectionHeight/2);
-      return 'translate(' + tx + ', ' + ty + ')';
+      var tx = paneLeft  + x(i);
+      return 'translate(' + tx + ', 0)';
     });
-
-  // punchcard.
-  //   append('g').
-  //   selectAll('circle').
-  //   data( this.data ).
-  //   enter().
-  //   append('circle').
-  //   style('fill', '#888').
-  //   attr('r', function(d, i) {
-  //     // console.log( d, i );
-  //     return d / max * circleRadius;
-  //   }).
-  //   attr('transform', function(d, i) {
-  //       tx = paneLeft  + x(j);
-  //       ty = height - y(i) - (sectionHeight/2);
-  //       return 'translate(' + tx + ', ' + ty + ')';
-  //     });
-
-
-
-
-
-
-
-
-
 
   // // Show the circles on the punchcard.
   // for (i = 0; i < this.data.length; i++) {
