@@ -10,17 +10,19 @@ function Punchcard( options ) {
 
 Punchcard.prototype.draw = function( options ){
 
-  var width = options.width,
+  var margin = 10,
+      lineHeight = 5,
+      width = options.width - (margin *2),
       pane_left = 80,
       pane_right = width - pane_left,
-      height = 500,
-      margin = 10,
-      section_height = (height-20)/7,
+      height = 500 - margin,
+      section_height = (height-(margin*2))/7,
       i,
       j,
       tx,
       ty,
-      max = 0;
+      max = 0,
+      circleRadius = 20;
 
   // var margin = { top: 10, right: 10, bottom: 10, left: 80 },
   //     width = options.width - margin.left - margin.right,
@@ -40,15 +42,12 @@ Punchcard.prototype.draw = function( options ){
   var y = d3.scale.linear().domain([0, 6]).
     range([2 * margin, height - section_height]);
 
-
-  // $( this.element ).empty();
-
   // The main SVG element.
   var punchcard = d3.select(this.element)
     .html('')
     .append('svg')
-      .attr('width', width )
-      .attr('height', height  )
+      .attr('width', width + (margin * 2 ))
+      .attr('height', height + margin)
       .append('g');
 
   // Hour line markers by day.
@@ -59,7 +58,7 @@ Punchcard.prototype.draw = function( options ){
       data([0]).
       enter().
       append('line').
-      attr('x1', margin).
+      attr('x1', 0).
       attr('x2', width).
       attr('y1', height - y(i)).
       attr('y2', height - y(i)).
@@ -72,8 +71,8 @@ Punchcard.prototype.draw = function( options ){
       data([0]).
       enter().
       append('text').
-      attr('x', margin).
-      attr('y', height - y(i) - 5).
+      attr('x', 0).
+      attr('y', height - y(i) - (section_height/2) + lineHeight).
       attr('text-anchor', 'left').
       text(['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday'][i]);
 
@@ -139,7 +138,7 @@ Punchcard.prototype.draw = function( options ){
         //    style('top', (d3.event.pageY - 10) + 'px').
         //    style('left', (d3.event.pageX + 10) + 'px');
         // }).
-        attr('r', function(d) { return d / max * 14; }).
+        attr('r', function(d) { return d / max * circleRadius; }).
         attr('transform', function() {
             tx = pane_left  + x(j);
             ty = height - y(i) - (section_height/2);
