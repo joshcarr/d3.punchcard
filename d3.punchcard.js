@@ -108,12 +108,12 @@ Punchcard.prototype.draw = function( options ){
 
   // Find the max value to normalize the size of the circles.
   max = d3.max( this.data , function(array) {
-    
+
     // we ignore the first element as it is metadata
     return d3.max(array.slice(1), function ( obj) {
 
-      // and we only return the value, not the key
-      return obj.value;
+      // and we only return the interger verion of the value, not the key
+      return parseInt(obj.value, 10);
     });
   });
 
