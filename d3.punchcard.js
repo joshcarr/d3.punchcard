@@ -10,13 +10,15 @@ function Punchcard( options ) {
 
 Punchcard.prototype.draw = function( options ){
 
+console.log( this.data );
+
   var margin = 10,
       lineHeight = 5,
       width = options.width - (margin *2),
       paneLeft = 80,
       paneRight = width - paneLeft,
-      height = 500 - margin,
-      sectionHeight = (height-(margin*2))/7,
+      sectionHeight = 50,
+      height = ( sectionHeight * this.data.length ) + margin,
       i,
       j,
       tx,
@@ -25,11 +27,11 @@ Punchcard.prototype.draw = function( options ){
       circleRadius = 20;
 
   // X-Axis.
-  var x = d3.scale.linear().domain([0, 23]).
+  var x = d3.scale.linear().domain([0, this.data[0].length-1]).
     range([paneLeft, paneRight ]);
 
   // Y-Axis.
-  var y = d3.scale.linear().domain([0, 6]).
+  var y = d3.scale.linear().domain([0, this.data.length-1]).
     range([2 * margin, height - sectionHeight]);
 
   // The main SVG element.
@@ -41,70 +43,74 @@ Punchcard.prototype.draw = function( options ){
       .append('g');
 
   // Hour line markers by day.
-  for (i in y.ticks(7)) {
+
+
     punchcard.
       append('g').
       selectAll('line').
-      data([0]).
+      data(this.data).
       enter().
       append('line').
       attr('x1', 0).
       attr('x2', width).
-      attr('y1', height - y(i)).
-      attr('y2', height - y(i)).
+      attr('y1', function (d, i) {
+        return height - y(i)
+      }).
+      attr('y2', function (d, i) {
+        return height - y(i)
+      }).
       style('stroke-width', 1).
       style('stroke', '#efefef');
 
     punchcard.
       append('g').
       selectAll('.rule').
-      data([0]).
+      data(this.data).
       enter().
       append('text').
       attr('x', 0).
-      attr('y', height - y(i) - (sectionHeight/2) + lineHeight).
+      attr('y', function (d, i) {
+        return height - y(i) - (sectionHeight/2) + lineHeight;
+      }).
       attr('text-anchor', 'left').
-      text(['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday'][i]);
+      text(function (d, i) {
+        return d[0].value;
+      });
 
+
+    // removing the individual ticks for now
     punchcard.
       append('g').
       selectAll('line').
-      data(x.ticks(24)).
+      data(this.data[0]).
       enter().
       append('line').
-      attr('x1', function(d) { return paneLeft  + x(d); }).
-      attr('x2', function(d) { return paneLeft  + x(d); }).
-      attr('y1', height - 1 * margin - y(i)).
-      attr('y2', height  - y(i)).
+      attr('x1', function(d,i) { return paneLeft  + x(i); }).
+      attr('x2', function(d,i) { return paneLeft  + x(i); }).
+      attr('y1', function (d, i) {
+        return  height - (2* margin)
+      }).
+      attr('y2', function (d, i) {
+        return height - margin;
+      }).
+
       style('stroke-width', 1).
-      style('stroke', '#ccc');
-  }
+      style('stroke', '#efefef');
+
 
   // Hour text markers.
   punchcard.
     selectAll('.rule').
-    data(x.ticks(24)).
+    data(this.data[0]).
     enter().
     append('text').
     attr('class', 'rule').
-    attr('x', function(d) { return paneLeft  + x(d); }).
+    attr('x', function(d, i) { return paneLeft  + x(i); }).
     attr('y', height ).
     attr('text-anchor', 'middle').
     text(function(d) {
-      if (d === 0) {
-        return '12a';
-      } else if (d > 0 && d < 12) {
-        return d;
-      } else if (d === 12) {
-        return '12p';
-      } else if (d > 12 && d < 25) {
-        return d - 12;
-      }
+      return d.key;
     });
-
-  // Data has array where indicy 0 is Monday and 6 is Sunday, however we draw
-  // from the bottom up.
-  this.data = this.data.reverse();
 
   // Find the max value to normalize the size of the circles.
   max = d3.max( this.data , function(array) {
