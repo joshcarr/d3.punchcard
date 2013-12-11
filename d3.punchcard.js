@@ -53,60 +53,60 @@ Punchcard.prototype.draw = function( options ){
   // Hour line markers by day.
   for (i in y.ticks(7)) {
     punchcard.
-      append("g").
-      selectAll("line").
+      append('g').
+      selectAll('line').
       data([0]).
       enter().
-      append("line").
-      attr("x1", margin).
-      attr("x2", width).
-      attr("y1", height - y(i)).
-      attr("y2", height - y(i)).
-      style("stroke-width", 1).
-      style("stroke", "#efefef");
+      append('line').
+      attr('x1', margin).
+      attr('x2', width).
+      attr('y1', height - y(i)).
+      attr('y2', height - y(i)).
+      style('stroke-width', 1).
+      style('stroke', '#efefef');
 
     punchcard.
-      append("g").
-      selectAll(".rule").
+      append('g').
+      selectAll('.rule').
       data([0]).
       enter().
-      append("text").
-      attr("x", margin).
-      attr("y", height - y(i) - 5).
-      attr("text-anchor", "left").
-      text(["Sunday", "Saturday", "Friday", "Thursday", "Wednesday", "Tuesday", "Monday"][i]);
+      append('text').
+      attr('x', margin).
+      attr('y', height - y(i) - 5).
+      attr('text-anchor', 'left').
+      text(['Sunday', 'Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday'][i]);
 
     punchcard.
-      append("g").
-      selectAll("line").
+      append('g').
+      selectAll('line').
       data(x.ticks(24)).
       enter().
-      append("line").
-      attr("x1", function(d) { return pane_left  + x(d); }).
-      attr("x2", function(d) { return pane_left  + x(d); }).
-      attr("y1", height - 1 * margin - y(i)).
-      attr("y2", height  - y(i)).
-      style("stroke-width", 1).
-      style("stroke", "#ccc");
+      append('line').
+      attr('x1', function(d) { return pane_left  + x(d); }).
+      attr('x2', function(d) { return pane_left  + x(d); }).
+      attr('y1', height - 1 * margin - y(i)).
+      attr('y2', height  - y(i)).
+      style('stroke-width', 1).
+      style('stroke', '#ccc');
   }
 
   // Hour text markers.
   punchcard.
-    selectAll(".rule").
+    selectAll('.rule').
     data(x.ticks(24)).
     enter().
-    append("text").
-    attr("class", "rule").
-    attr("x", function(d) { return pane_left  + x(d); }).
-    attr("y", height ).
-    attr("text-anchor", "middle").
+    append('text').
+    attr('class', 'rule').
+    attr('x', function(d) { return pane_left  + x(d); }).
+    attr('y', height ).
+    attr('text-anchor', 'middle').
     text(function(d) {
       if (d === 0) {
-        return "12a";
+        return '12a';
       } else if (d > 0 && d < 12) {
         return d;
       } else if (d === 12) {
-        return "12p";
+        return '12p';
       } else if (d > 12 && d < 25) {
         return d - 12;
       }
@@ -125,39 +125,39 @@ Punchcard.prototype.draw = function( options ){
   for (i = 0; i < this.data.length; i++) {
     for (j = 0; j < this.data[i].length; j++) {
       punchcard.
-        append("g").
-        selectAll("circle").
+        append('g').
+        selectAll('circle').
         data([this.data[i][j]]).
         enter().
-        append("circle").
-        style("fill", "#888").
-        // on("mouseover", mover).
-        // on("mouseout", mout).
-        // on("mousemove", function() {
+        append('circle').
+        style('fill', '#888').
+        // on('mouseover', mover).
+        // on('mouseout', mout).
+        // on('mousemove', function() {
         //  return tooltip.
-        //    style("top", (d3.event.pageY - 10) + "px").
-        //    style("left", (d3.event.pageX + 10) + "px");
+        //    style('top', (d3.event.pageY - 10) + 'px').
+        //    style('left', (d3.event.pageX + 10) + 'px');
         // }).
-        attr("r", function(d) { return d / max * 14; }).
-        attr("transform", function() {
+        attr('r', function(d) { return d / max * 14; }).
+        attr('transform', function() {
             tx = pane_left  + x(j);
             ty = height - y(i) - (((height-20)/7)/2);
-            return "translate(" + tx + ", " + ty + ")";
+            return 'translate(' + tx + ', ' + ty + ')';
           });
     }
     // function mover(d) {
-    //   tooltip = d3.select("body")
-    //    .append("div")
-    //    .style("position", "absolute")
-    //    .style("z-index", "99999")
-    //    .attr("class", "vis-tool-tip")
+    //   tooltip = d3.select('body')
+    //    .append('div')
+    //    .style('position', 'absolute')
+    //    .style('z-index', '99999')
+    //    .attr('class', 'vis-tool-tip')
     //    .text(d);
     // }
 
     // function mout(d) {
-    //   $(".vis-tool-tip").fadeOut(50).remove();
+    //   $('.vis-tool-tip').fadeOut(50).remove();
     // }
   }
 
   return this;
-}
+};
