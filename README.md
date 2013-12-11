@@ -1,0 +1,1 @@
+An abstraction for creating a GitHub-like punchcard visualization a la: https://github.com/twbs/bootstrap/graphs/punch-card

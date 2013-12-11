@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <meta charset="utf-8">
+        <title>d3.punchcard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+
+    </head>
+    <body>
+    <div class="container">
+        <h1>Example</h1>
+        <div id="example"></div>
+    </div>
+
+      <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.11/d3.min.js"></script>
+      <script src="d3.punchcard.js"></script>
+
+      <script>
+
+      this.exceedencePunchcard = new Punchcard({
+        data: [
+          [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 4, 4, 1, 1, 1, 1, 0],
+          [1, 0, 0, 0, 1, 1, 4, 5, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+          [1, 0, 0, 0, 1, 1, 4, 3, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 4, 1, 1, 1, 1, 0],
+          [1, 0, 0, 0, 1, 1, 4, 2, 5, 1, 1, 1, 1, 1, 1, 2, 5, 5, 4, 1, 1, 1, 1, 0],
+          [1, 0, 0, 0, 1, 1, 4, 3, 3, 1, 1, 1, 1, 1, 1, 2, 5, 3, 4, 1, 1, 1, 1, 5],
+          [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0],
+          [3, 3, 4, 2, 2, 0, 0, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0]
+        ],
+        element: '#example'
+      })
+      .draw({ width: document.getElementById('example').offsetWidth });
+
+      </script>
+
+
+
+    </body>
+</html>
