@@ -34,9 +34,33 @@
 
 
         function showGraph ( data ) {
-          var examplePunchcard = new Punchcard({
+
+          var flatAscending,
+          upperLimit,
+          examplePunchcard;
+
+          flatAscending = data.map( function(array) {
+            var value;
+            return array.slice(1).map( function ( sliced ) {
+              return parseInt( sliced.value, 10);
+            }).filter(function ( element ) {
+              return element > 0;
+            });
+
+          }).reduce(function(a, b) {
+            return a.concat(b);
+          }).sort(function(a, b) {
+            return a - b;
+          } );
+
+          // we find the upper limit quantile in order
+          // to not show upper outliers
+          upperLimit = d3.quantile( flatAscending, 0.95 );
+
+          examplePunchcard = new Punchcard({
             data: data,
-            element: '#example'
+            element: '#example',
+            upperLimit: upperLimit
           })
           .draw({ width: document.getElementById('example').offsetWidth });
         }

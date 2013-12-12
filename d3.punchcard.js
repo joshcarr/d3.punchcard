@@ -20,6 +20,14 @@ function Punchcard( options ) {
     });
   });
 
+  // set the upperlimit if we have it
+  // otherwise use the max
+  if( options.upperLimit ){
+    this.upperLimit = options.upperLimit;
+  } else {
+    this.upperLimit = this.max;
+  }
+
   return this;
 }
 
@@ -38,7 +46,8 @@ Punchcard.prototype.draw = function( options ){
       x,
       y,
       punchcard,
-      punchcardRow;
+      punchcardRow,
+      rScale;
 
   // X-Axis.
   x = d3.scale.linear().domain([0, this.data[0].length-1]).
@@ -47,6 +56,10 @@ Punchcard.prototype.draw = function( options ){
   // Y-Axis.
   y = d3.scale.linear().domain([0, this.data.length-1]).
     range([0, height - sectionHeight]);
+
+  rScale = d3.scale.linear()
+    .domain([0, this.upperLimit, this.max])
+    .range([0, circleRadius, circleRadius]);
 
   // these functions hide and show the circles and text values
   function handleRowMouseover(){
@@ -157,7 +170,7 @@ Punchcard.prototype.draw = function( options ){
     append('circle').
     style('fill', '#888').
     attr('r', function(d, i) {
-      return parseInt( d.value, 10) / _this.max * circleRadius;
+      return rScale( parseInt( d.value, 10) );
     }).
     attr('transform', function(d, i) {
       var tx = paneLeft  + x(i);
