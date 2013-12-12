@@ -164,7 +164,7 @@ D3punchcard.prototype.draw = function( options ){
 
   // create row headers
   punchcardRow.
-    selectAll('.rule').
+    selectAll('.textheader').
     data( function(d, i ) {
       
       // we only return the first element of each array
@@ -177,6 +177,7 @@ D3punchcard.prototype.draw = function( options ){
     attr('y', function (d, i) {
       return lineHeight;
     }).
+    attr('class', 'textheader').
     attr('text-anchor', 'left').
     text(function (d, i) {
       return d.value;
@@ -223,6 +224,17 @@ D3punchcard.prototype.draw = function( options ){
     });
 
   return this;
+};
+
+// to be called when closing a view
+// in which this object has been created
+D3punchcard.prototype.destroy = function () {
+  
+  // remove event listeners
+  d3.select(this.element)
+    .selectAll('text.textheader')
+    .on('mouseover', null)
+    .on('mouseout', null);
 };
 
 /**
