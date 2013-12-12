@@ -3,14 +3,30 @@
 // https://github.com/jeyb/d3.punchcard
 
 function Punchcard( options ) {
-  this.data = options.data;
+  
+  // Reverse the data as we draw
+  // from the bottom up.
+  this.data = options.data.reverse();
   this.element = options.element;
+
+  // Find the max value to normalize the size of the circles.
+  this.max = d3.max( this.data , function(array) {
+
+    // we ignore the first element as it is metadata
+    return d3.max(array.slice(1), function ( obj ) {
+
+      // and we only return the interger verion of the value, not the key
+      return parseInt(obj.value, 10);
+    });
+  });
+
   return this;
 }
 
 Punchcard.prototype.draw = function( options ){
 
-  var margin = 10,
+  var _this = this,
+      margin = 10,
       lineHeight = 5,
       width = options.width,
       paneLeft = 80,
@@ -18,24 +34,22 @@ Punchcard.prototype.draw = function( options ){
       sectionHeight = 50,
       height = ( sectionHeight * this.data.length ),
       sectionWidth = paneRight / this.data[0].length,
-      max = 0,
       circleRadius = 20,
+      x,
+      y,
+      punchcard,
       punchcardRow;
 
-  // Reverse the data as we draw
-  // from the bottom up.
-  this.data = this.data.reverse();
-
   // X-Axis.
-  var x = d3.scale.linear().domain([0, this.data[0].length-1]).
+  x = d3.scale.linear().domain([0, this.data[0].length-1]).
     range([ paneLeft + (sectionWidth / 2) , paneRight + (sectionWidth / 2)]);
 
   // Y-Axis.
-  var y = d3.scale.linear().domain([0, this.data.length-1]).
+  y = d3.scale.linear().domain([0, this.data.length-1]).
     range([0, height - sectionHeight]);
 
   // The main SVG element.
-  var punchcard = d3.select(this.element)
+  punchcard = d3.select(this.element)
     .html('')
     .append('svg')
       .attr('width', width )
@@ -94,7 +108,6 @@ Punchcard.prototype.draw = function( options ){
     style('stroke-width', 1).
     style('stroke', '#efefef');
 
-
   // create x-axis tick text.
   punchcard.
     selectAll('.rule').
@@ -108,17 +121,6 @@ Punchcard.prototype.draw = function( options ){
     text(function(d) {
       return d.key;
     });
-
-  // Find the max value to normalize the size of the circles.
-  max = d3.max( this.data , function(array) {
-
-    // we ignore the first element as it is metadata
-    return d3.max(array.slice(1), function ( obj) {
-
-      // and we only return the interger verion of the value, not the key
-      return parseInt(obj.value, 10);
-    });
-  });
 
   // create rows
   punchcardRow = punchcard.selectAll('.row')
@@ -141,7 +143,7 @@ Punchcard.prototype.draw = function( options ){
     append('circle').
     style('fill', '#888').
     attr('r', function(d, i) {
-      return parseInt( d.value, 10) / max * circleRadius;
+      return parseInt( d.value, 10) / _this.max * circleRadius;
     }).
     attr('transform', function(d, i) {
       var tx = paneLeft  + x(i);
