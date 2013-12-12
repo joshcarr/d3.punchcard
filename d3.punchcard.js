@@ -39,14 +39,15 @@ Punchcard.prototype.draw = function( options ){
       width = options.width,
       paneLeft = 80,
       paneRight = width - paneLeft,
-      sectionHeight = 50,
+      sectionHeight = 35,
       height = ( sectionHeight * this.data.length ),
       sectionWidth = paneRight / this.data[0].length,
-      circleRadius = 20,
+      circleRadius = 14,
       x,
       y,
       punchcard,
       punchcardRow,
+      xAxis,
       rScale;
 
   // X-Axis.
@@ -82,33 +83,56 @@ Punchcard.prototype.draw = function( options ){
       .attr('height', height + (margin*3))
       .append('g');
 
+  // create the x axis holder
+  xAxis = punchcard.selectAll('.row')
+    .data( [this.data[0].slice(1)] )
+    .enter()
+    .append('g')
+    .attr('class', 'xaxis');
+
+  // create the x axis line
+  xAxis.
+    append('line').
+    attr('x1', 0).
+    attr('x2', width).
+    attr('y1',  (margin * 3)).
+    attr('y2',  (margin * 3)).
+    style('stroke-width', 1).
+    style('stroke', '#efefef');
+
   // create x-axis ticks
-  punchcard.
-    append('g').
-    selectAll('line').
-    data(this.data[0].slice(1)).
+  xAxis.
+    selectAll('line.tick').
+    data(function(d, i ) {
+      return d;
+    }).
     enter().
     append('line').
+    attr('class', 'tick').
     attr('x1', function(d,i) { return paneLeft  + x(i); }).
     attr('x2', function(d,i) { return paneLeft  + x(i); }).
     attr('y1', function (d, i) {
-      return height + margin;
+      return margin * 2;
     }).
     attr('y2', function (d, i) {
-      return height;
+      return (margin * 3);
     }).
     style('stroke-width', 1).
     style('stroke', '#efefef');
 
   // create x-axis tick text.
-  punchcard.
+  xAxis.
     selectAll('.rule').
-    data(this.data[0].slice(1)).
+    data(function(d, i ) {
+      return d;
+    }).
     enter().
     append('text').
     attr('class', 'rule').
-    attr('x', function(d, i) { return paneLeft  + x(i); }).
-    attr('y', height  + (2*margin) + lineHeight).
+    attr('x', function(d, i) {
+      return paneLeft  + x(i);
+    }).
+    attr('y', margin + lineHeight).
     attr('text-anchor', 'middle').
     text(function(d) {
       return d.key;
@@ -121,7 +145,7 @@ Punchcard.prototype.draw = function( options ){
     .append('g')
     .attr('class', 'row')
     .attr('transform', function(d, i) {
-      var ty = height - y(i) - (sectionHeight/2);
+      var ty = height - y(i) - (sectionHeight/2) + (margin*3);
       return 'translate(0, ' + ty + ')';
     });
 
