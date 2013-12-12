@@ -56,40 +56,6 @@ Punchcard.prototype.draw = function( options ){
       .attr('height', height + (margin*3))
       .append('g');
 
-  // create row divinding lines 
-  punchcard.
-    append('g').
-    selectAll('line').
-    data(this.data).
-    enter().
-    append('line').
-    attr('x1', 0).
-    attr('x2', width).
-    attr('y1', function (d, i) {
-      return height - y(i);
-    }).
-    attr('y2', function (d, i) {
-      return height - y(i);
-    }).
-    style('stroke-width', 1).
-    style('stroke', '#efefef');
-
-  // create row headers
-  punchcard.
-    append('g').
-    selectAll('.rule').
-    data(this.data).
-    enter().
-    append('text').
-    attr('x', 0).
-    attr('y', function (d, i) {
-      return height - y(i) - (sectionHeight/2) + lineHeight;
-    }).
-    attr('text-anchor', 'left').
-    text(function (d, i) {
-      return d[0].value;
-    });
-
   // create x-axis ticks
   punchcard.
     append('g').
@@ -131,6 +97,39 @@ Punchcard.prototype.draw = function( options ){
     .attr('transform', function(d, i) {
       var ty = height - y(i) - (sectionHeight/2);
       return 'translate(0, ' + ty + ')';
+    });
+
+  // create row divinding lines 
+  punchcardRow.
+    selectAll('line').
+    data([0]).
+    enter().
+    append('line').
+    attr('x1', 0).
+    attr('x2', width).
+    attr('y1', (sectionHeight/2)).
+    attr('y2', (sectionHeight/2)).
+    style('stroke-width', 1).
+    style('stroke', '#efefef');
+
+  // create row headers
+  punchcardRow.
+    selectAll('.rule').
+    data( function(d, i ) {
+      
+      // we only return the first element of each array
+      // which contains the header text
+      return [d[0]];
+    } ).
+    enter().
+    append('text').
+    attr('x', 0).
+    attr('y', function (d, i) {
+      return lineHeight;
+    }).
+    attr('text-anchor', 'left').
+    text(function (d, i) {
+      return d.value;
     });
 
   // draw circles for each row
