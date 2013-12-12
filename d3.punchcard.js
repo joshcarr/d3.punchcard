@@ -18,13 +18,13 @@ Punchcard.prototype.draw = function( options ){
       sectionHeight = 50,
       height = ( sectionHeight * this.data.length ),
       sectionWidth = paneRight / this.data[0].length,
-      i,
-      j,
-      tx,
-      ty,
       max = 0,
       circleRadius = 20,
       punchcardRow;
+
+  // Reverse the data as we draw
+  // from the bottom up.
+  this.data = this.data.reverse();
 
   // X-Axis.
   var x = d3.scale.linear().domain([0, this.data[0].length-1]).
@@ -42,9 +42,7 @@ Punchcard.prototype.draw = function( options ){
       .attr('height', height + (margin*3))
       .append('g');
 
-  // Hour line markers by day.
-
-
+  // create row divinding lines 
   punchcard.
     append('g').
     selectAll('line').
@@ -62,6 +60,7 @@ Punchcard.prototype.draw = function( options ){
     style('stroke-width', 1).
     style('stroke', '#efefef');
 
+  // create row headers
   punchcard.
     append('g').
     selectAll('.rule').
@@ -77,7 +76,7 @@ Punchcard.prototype.draw = function( options ){
       return d[0].value;
     });
 
-
+  // create x-axis ticks
   punchcard.
     append('g').
     selectAll('line').
@@ -92,12 +91,11 @@ Punchcard.prototype.draw = function( options ){
     attr('y2', function (d, i) {
       return height;
     }).
-
     style('stroke-width', 1).
     style('stroke', '#efefef');
 
 
-  // Hour text markers.
+  // create x-axis tick text.
   punchcard.
     selectAll('.rule').
     data(this.data[0].slice(1)).
@@ -122,10 +120,7 @@ Punchcard.prototype.draw = function( options ){
     });
   });
 
-
-
-// console.log( punchcard );
-
+  // create rows
   punchcardRow = punchcard.selectAll('.row')
     .data( this.data )
     .enter()
@@ -136,6 +131,7 @@ Punchcard.prototype.draw = function( options ){
       return 'translate(0, ' + ty + ')';
     });
 
+  // draw circles for each row
   punchcardRow.
     selectAll('circle').
     data( function(d, i ) {
@@ -151,50 +147,6 @@ Punchcard.prototype.draw = function( options ){
       var tx = paneLeft  + x(i);
       return 'translate(' + tx + ', 0)';
     });
-
-  // // Show the circles on the punchcard.
-  // for (i = 0; i < this.data.length; i++) {
-
-
-  //   // we start with 1 to igone the first metadata element
-  //   for (j = 1; j < this.data[i].length; j++) {
-
-  //     punchcard.
-  //       append('g').
-  //       selectAll('circle').
-  //       data([parseInt(this.data[i][j].value, 10)]).
-  //       enter().
-  //       append('circle').
-  //       style('fill', '#888').
-  //       // on('mouseover', mover).
-  //       // on('mouseout', mout).
-  //       // on('mousemove', function() {
-  //       //  return tooltip.
-  //       //    style('top', (d3.event.pageY - 10) + 'px').
-  //       //    style('left', (d3.event.pageX + 10) + 'px');
-  //       // }).
-  //       attr('r', function(d) {
-  //         return d / max * circleRadius;
-  //       }).
-  //       attr('transform', function() {
-  //           tx = paneLeft  + x(j);
-  //           ty = height - y(i) - (sectionHeight/2);
-  //           return 'translate(' + tx + ', ' + ty + ')';
-  //         });
-  //   }
-  //   // function mover(d) {
-  //   //   tooltip = d3.select('body')
-  //   //    .append('div')
-  //   //    .style('position', 'absolute')
-  //   //    .style('z-index', '99999')
-  //   //    .attr('class', 'vis-tool-tip')
-  //   //    .text(d);
-  //   // }
-
-  //   // function mout(d) {
-  //   //   $('.vis-tool-tip').fadeOut(50).remove();
-  //   // }
-  // }
 
   return this;
 };
