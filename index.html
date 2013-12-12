@@ -57,7 +57,7 @@
           // to not show upper outliers
           upperLimit = d3.quantile( flatAscending, 0.95 );
 
-          examplePunchcard = new Punchcard({
+          examplePunchcard = new D3punchcard({
             data: data,
             element: '#example',
             upperLimit: upperLimit

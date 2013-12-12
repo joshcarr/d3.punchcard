@@ -1,25 +1,15 @@
 {
   "globals": {
-    "jQuery": true,
-    "Backbone": true,
-    "_": true,
-    "Marionette": true,
-    "$": true,
     "d3": true,
-    "Handlebars": true,
     "require": true,
     "define": true,
-    "google": true,
-    "gapi": true,
-    "_gaq": true,
-    "mixpanel": true
+    "module": true
   },
   "browser": true,
   "bitwise": true,
   "curly": true,
   "eqeqeq": true,
   "immed": true,
-  "indent": 2,
   "latedef": true,
   "newcap": true,
   "noempty": true,

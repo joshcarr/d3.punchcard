@@ -1,8 +1,8 @@
-// adapted from
-// http://jeybalachandran.com/posts/San-Francisco-Caltrain-Punchcard/
-// https://github.com/jeyb/d3.punchcard
+/*! D3punchcard v0.1.0 - MIT license */
 
-function Punchcard( options ) {
+;(function (global) { function moduleDefinition( d3 ) {
+
+function D3punchcard( options ) {
   
   // Reverse the data as we draw
   // from the bottom up.
@@ -31,7 +31,7 @@ function Punchcard( options ) {
   return this;
 }
 
-Punchcard.prototype.draw = function( options ){
+D3punchcard.prototype.draw = function( options ){
 
   var _this = this,
       margin = 10,
@@ -224,3 +224,22 @@ Punchcard.prototype.draw = function( options ){
 
   return this;
 };
+
+/**
+ * Expose D3punchcard
+ */
+
+return D3punchcard;
+
+// ---------------------------------------------------------------------------
+
+} if (typeof exports === 'object') {
+    // node export
+    module.exports = moduleDefinition(require('d3'));
+} else if (typeof define === 'function' && define.amd) {
+    // amd anonymous module registration
+    define(['d3'], moduleDefinition);
+} else {
+    // browser global
+    global.D3punchcard = moduleDefinition(global.d3);
+}}(this));
