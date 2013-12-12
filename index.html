@@ -42,7 +42,7 @@
           flatAscending = data.map( function(array) {
             var value;
             return array.slice(1).map( function ( sliced ) {
-              return parseInt( sliced.value, 10);
+              return parseFloat( sliced.value );
             }).filter(function ( element ) {
               return element > 0;
             });

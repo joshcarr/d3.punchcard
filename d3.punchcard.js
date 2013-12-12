@@ -16,7 +16,7 @@ function D3punchcard( options ) {
     return d3.max(array.slice(1), function ( obj ) {
 
       // and we only return the interger verion of the value, not the key
-      return parseInt(obj.value, 10);
+      return parseFloat( obj.value );
     });
   });
 
@@ -195,7 +195,7 @@ D3punchcard.prototype.draw = function( options ){
     append('circle').
     style('fill', '#888').
     attr('r', function(d, i) {
-      return rScale( parseInt( d.value, 10) );
+      return rScale( parseFloat( d.value ) );
     }).
     attr('transform', function(d, i) {
       var tx = paneLeft  + x(i);
