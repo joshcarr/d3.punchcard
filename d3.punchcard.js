@@ -48,6 +48,19 @@ Punchcard.prototype.draw = function( options ){
   y = d3.scale.linear().domain([0, this.data.length-1]).
     range([0, height - sectionHeight]);
 
+  // these functions hide and show the circles and text values
+  function handleRowMouseover(){
+    var g = d3.select(this).node().parentNode;
+    d3.select(g).selectAll('circle').style('display','none');
+    d3.select(g).selectAll('text.value').style('display','block');
+  }
+
+  function handleRowMouseout(){
+    var g = d3.select(this).node().parentNode;
+    d3.select(g).selectAll('circle').style('display','block');
+    d3.select(g).selectAll('text.value').style('display','none');
+  }
+
   // The main SVG element.
   punchcard = d3.select(this.element)
     .html('')
@@ -130,7 +143,9 @@ Punchcard.prototype.draw = function( options ){
     attr('text-anchor', 'left').
     text(function (d, i) {
       return d.value;
-    });
+    })
+    .on('mouseover', handleRowMouseover)
+    .on('mouseout', handleRowMouseout);
 
   // draw circles for each row
   punchcardRow.
@@ -147,6 +162,27 @@ Punchcard.prototype.draw = function( options ){
     attr('transform', function(d, i) {
       var tx = paneLeft  + x(i);
       return 'translate(' + tx + ', 0)';
+    });
+
+  // draw text values for each row
+  punchcardRow.
+    selectAll('text.value').
+    data( function(d, i ) {
+      return d.slice(1);
+    } ).
+    enter().
+    append('text').
+    attr('class', 'value').
+    style('display','none').
+    text(function (d, i) {
+      return d.value;
+    }).
+    attr('text-anchor', 'middle').
+    attr('x', function (d, i) {
+      return paneLeft  + x(i);
+    }).
+    attr('y', function (d, i) {
+      return lineHeight;
     });
 
   return this;
